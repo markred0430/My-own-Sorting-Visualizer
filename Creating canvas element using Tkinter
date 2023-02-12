@@ -1,4 +1,23 @@
 1. Making a Window - DONE
+import tkinter as tk
+from tkinter import ttk
+
+root = tk.Tk()
+
+#Styling Frame
+pampaganda = ttk.Style()
+pampaganda.configure('mainFrame.TFrame', background = 'blue')
+
+#create a main window frame
+mainFrame = ttk.Frame(root, width = 400, height = 400, style='mainFrame.TFrame')
+mainFrame.grid()
+
+
+root.resizable(width = False, height = False)
+root.mainloop()
+
+relief styles useful for styling buttons.
+
 2. Creating a canvas
 3. Creating buttons
 4. Creating a List
