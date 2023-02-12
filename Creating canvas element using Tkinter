@@ -18,7 +18,8 @@ root.mainloop()
 
 relief styles useful for styling buttons.
 
-2. Creating a canvas
+2. Creating a frames. - DONE
+
 3. Creating buttons
 4. Creating a List
 5. Creating a slide
