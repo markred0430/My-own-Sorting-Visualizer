@@ -1,27 +1,19 @@
+A. MAKING GUI TKINTER
 1. Making a Window - DONE
-import tkinter as tk
-from tkinter import ttk
-
-root = tk.Tk()
-
-#Styling Frame
-pampaganda = ttk.Style()
-pampaganda.configure('mainFrame.TFrame', background = 'blue')
-
-#create a main window frame
-mainFrame = ttk.Frame(root, width = 400, height = 400, style='mainFrame.TFrame')
-mainFrame.grid()
-
-
-root.resizable(width = False, height = False)
-root.mainloop()
-
-relief styles useful for styling buttons.
-
 2. Creating a frames. - DONE
-
 3. Creating buttons - DONE
 4. Creating a List - DONE
 5. Creating a slide - DONE
 6. Creating Button Starter - DONE
 7. Creating Button Quitter - DONE
+
+B.
+1. Coding Sorting Algorithms. - DONE
+2. Coloring the bars. - DONE
+3. Setting up the swapping bars when sorting. - DONE
+4. Making verify function and animating verify function
+5. Making start function.
+6. Making animation function.
+7. Making generator function to generate data.
+
+
