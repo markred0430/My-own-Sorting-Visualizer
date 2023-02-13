@@ -1,4 +1,4 @@
-def _bubble_sort():
+def bubble_Sort():
     global barList
     global lengthList
 

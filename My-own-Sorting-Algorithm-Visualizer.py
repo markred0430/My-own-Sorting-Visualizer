@@ -5,6 +5,12 @@ from tkinter import ttk
 from tkinter import HORIZONTAL
 import numpy as np
 import simpleaudio as sa
+from Bubble_Sort import bubble_Sort
+from Selection_Sort import selection_Sort
+from Insertion_Sort import insertion_Sort
+from Bogo_Sort import bogo_Sort
+from Comb_Sort import  comb_Sort
+from CocktailShaker_Sort import cocktail_shaker_Sort
 
 # ===========================LIST OF SORTING ALGORITHMS=====================
 OPTIONS = [
@@ -55,7 +61,7 @@ def sound(size):
 
     # wait for playback to finish before exiting
     # play_obj.wait_done()
-# ===========================  VERIFY=========================
+# ===========================  VERIFYING IF THE BARS ARE SORTED=========================
 def _verify():
     global barList
     global lengthList
@@ -73,6 +79,42 @@ def verify():
     global worker
     worker = _verify()
     animate()
+
+# =========================== START BUTTON FUNCTION=========================
+def start():
+    global worker
+    algo = variable.get()
+    if algo == OPTIONS[0]:
+        worker =  selection_Sort()
+    elif algo == OPTIONS[1]:
+        worker = bubble_Sort()
+    elif algo == OPTIONS[2]:
+        worker = insertion_Sort()
+    elif algo == OPTIONS[3]:
+        worker = comb_Sort()
+    elif algo == OPTIONS[4]:
+        worker = cocktail_shaker_Sort()
+    elif algo == OPTIONS[5]:
+        worker = bogo_Sort()
+    animate()
+
+# ===========================  ANIMATION FUNCTION=========================
+def animate():
+    global worker
+    global is_verify
+    if worker is not None:
+        try:
+            next(worker)
+            root.after(scale_speed.get(), animate)
+        except StopIteration:
+            if not is_verify:
+                verify()
+                is_verify = True
+            else:
+                is_verify = False
+                worker = None
+        finally:
+            root.after_cancel(animate)
 
 
 
@@ -109,7 +151,7 @@ scale.set(10)
 scale_speed = tk.Scale(buttonFrame, from_=2, to=500, orient=HORIZONTAL, length=170, label="Speed",  font=('Times', 10), background='#C69749', foreground='#282A3A')
 scale_speed.set(10)
 Generate = tk.Button(buttonFrame, text="Generate", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
-Start = tk.Button(buttonFrame, text="Start", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
+Start = tk.Button(buttonFrame, text="Start", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', command = start,  foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
 exit = tk.Button(buttonFrame, text="Exit", width=20, font=('Times', 20), background='#C69749', highlightcolor='red',  command=root.quit, foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
 
 dropDown.grid(padx=15, pady=15, row=0, column=0, sticky='WE')

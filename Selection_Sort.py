@@ -1,4 +1,4 @@
-def _selection_sort():
+def selection_Sort():
     global barList
     global lengthList
 

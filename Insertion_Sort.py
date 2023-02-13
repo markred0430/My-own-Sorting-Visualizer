@@ -1,4 +1,4 @@
-def _insertion_sort():
+def insertion_Sort():
     global barList
     global lengthList
 

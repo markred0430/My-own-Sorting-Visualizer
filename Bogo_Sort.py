@@ -1,4 +1,4 @@
-def bogo_sort():
+def bogo_Sort():
     global barList
     global lengthList
 

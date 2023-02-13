@@ -1,4 +1,4 @@
-def _comb_sort():
+def comb_Sort():
     global barList
     global lengthList
 
