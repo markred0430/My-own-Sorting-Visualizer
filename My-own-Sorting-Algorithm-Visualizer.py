@@ -3,6 +3,8 @@ import tkinter as tk
 import random
 from tkinter import ttk
 from tkinter import HORIZONTAL
+import numpy as np
+import simpleaudio as sa
 
 # ===========================LIST OF SORTING ALGORITHMS=====================
 OPTIONS = [
@@ -26,6 +28,51 @@ def swap(pos_0, pos_1):
     canvas.itemconfig(pos_1, fill='white')
     canvas.move(pos_0, bar21 - bar11, 0)
     canvas.move(pos_1, bar12 - bar22, 0)
+
+# ===========================Function for sound=====================
+def sound(size):
+    # calculate note frequencies
+    A_freq = 200
+    size = A_freq * size ** (4 / 12)
+
+    # get timesteps for each sample, T is note duration in seconds
+    sample_rate = 44100
+    T = 0.05
+    t = np.linspace(0, T, int(T * sample_rate), False)
+
+    # generate sine wave notes
+    Csh_note = np.sin(size * t * 2 * np.pi)
+
+    # concatenate notes
+    audio = np.hstack(Csh_note)
+    # normalize to 16-bit range
+    audio *= 700 / np.max(np.abs(audio))
+    # convert to 16-bit data
+    audio = audio.astype(np.int16)
+
+    # start playback
+    play_obj = sa.play_buffer(audio, 1, 2, sample_rate)
+
+    # wait for playback to finish before exiting
+    # play_obj.wait_done()
+# ===========================  VERIFY=========================
+def _verify():
+    global barList
+    global lengthList
+    global is_verify
+
+    for i in range(len(lengthList) - 1):
+        if lengthList[i] < lengthList[i + 1]:
+            colorBar(barList[i], 'green')
+            sound(lengthList[i])
+            yield
+    colorBar(barList[-1], 'green')
+
+
+def verify():
+    global worker
+    worker = _verify()
+    animate()
 
 
 
