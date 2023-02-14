@@ -1,16 +1,9 @@
-# Making a window using tkinter.
 import tkinter as tk
 import random
 from tkinter import ttk
 from tkinter import HORIZONTAL
 import numpy as np
 import simpleaudio as sa
-from Bubble_Sort import bubble_Sort
-from Selection_Sort import selection_Sort
-from Insertion_Sort import insertion_Sort
-from Bogo_Sort import bogo_Sort
-from Comb_Sort import  comb_Sort
-from CocktailShaker_Sort import cocktail_shaker_Sort
 
 # ===========================LIST OF SORTING ALGORITHMS=====================
 OPTIONS = [
@@ -21,6 +14,146 @@ OPTIONS = [
     "Cocktail Shaker Sort",
     "Bogo Sort"
 ]
+# ===========================SORTING ALGORITHMS=====================
+# -------------------------------------------SELECTION SORT------------------------------------------
+def selection_Sort():
+    global barList
+    global lengthList
+
+    for i in range(len(lengthList)):
+        min = i
+        for j in range(i + 1, len(lengthList)):
+            if (lengthList[j] < lengthList[min]):
+                min = j
+        lengthList[min], lengthList[i] = lengthList[i], lengthList[min]
+        barList[min], barList[i] = barList[i], barList[min]
+        swap(barList[min], barList[i])
+        yield
+
+# -------------------------------------------BUBBLE SORT------------------------------------------------
+def bubble_Sort():
+    global barList
+    global lengthList
+
+    for i in range(len(lengthList) - 1):
+        for j in range(len(lengthList) - i - 1):
+            if (lengthList[j] > lengthList[j + 1]):
+                lengthList[j], lengthList[j + 1] = lengthList[j + 1], lengthList[j]
+                barList[j], barList[j + 1] = barList[j + 1], barList[j]
+                swap(barList[j + 1], barList[j])
+                colorBar(barList[-i], 'white')
+                yield
+            else:
+                colorBar(barList[j], 'white')
+
+# -------------------------------------------INSERTION SORT------------------------------------------------
+
+def insertion_Sort():
+    global barList
+    global lengthList
+
+    for i in range(len(lengthList)):
+        cursor = lengthList[i]
+        cursorBar = barList[i]
+        pos = i
+
+        while pos > 0 and lengthList[pos - 1] > cursor:
+            lengthList[pos] = lengthList[pos - 1]
+            barList[pos], barList[pos - 1] = barList[pos - 1], barList[pos]
+            swap(barList[pos], barList[pos - 1])
+            yield
+            pos -= 1
+
+        lengthList[pos] = cursor
+        barList[pos] = cursorBar
+        swap(barList[pos], cursorBar)
+
+# -------------------------------------------COMB SORT------------------------------------------------
+def comb_Sort():
+    global barList
+    global lengthList
+
+    n = len(lengthList)
+    gap = n
+    shrink = 1.3
+    sorted = False
+    while not sorted:
+        gap = int(gap / shrink)
+        if gap > 1:
+            sorted = False
+        else:
+            gap = 1
+            sorted = True
+
+        i = 0
+        while i + gap < n:
+            if lengthList[i] > lengthList[i + gap]:
+                lengthList[i], lengthList[i + gap] = lengthList[i + gap], lengthList[i]
+                barList[i], barList[i + gap] = barList[i + gap], barList[i]
+                swap(barList[i], barList[i + gap])
+                sorted = False
+                yield
+            else:
+                colorBar(barList[i], "white")
+            i = i + 1
+
+# -------------------------------------------COCKTAIL SHAKER SORT------------------------------------------------
+
+def cocktail_shaker_Sort():
+    global barList
+    global lengthList
+
+    n = len(lengthList)
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(1, n):
+            if lengthList[i - 1] > lengthList[i]:
+                lengthList[i - 1], lengthList[i] = lengthList[i], lengthList[i - 1]
+                barList[i - 1], barList[i] = barList[i], barList[i - 1]
+                swap(barList[i], barList[i - 1])
+                swapped = True
+                yield
+            else:
+                colorBar(barList[i - 1], "white")
+        if swapped == False:
+            return
+        swapped = False
+        for i in range(n - 1, 0, -1):
+            if lengthList[i - 1] > lengthList[i]:
+                lengthList[i - 1], lengthList[i] = lengthList[i], lengthList[i - 1]
+                barList[i - 1], barList[i] = barList[i], barList[i - 1]
+                swap(barList[i - 1], barList[i])
+                swapped = True
+                yield
+            else:
+                colorBar(barList[i], "white")
+
+# -------------------------------------------BOGO SORT------------------------------------------------
+def bogo_Sort():
+    global barList
+    global lengthList
+
+    n = len(lengthList)
+    gap = n
+
+    def is_sorted(lengthList):
+        for i in range(0,n-1):
+            if lengthList[i] > lengthList[i+1]:
+                return False
+        return True
+
+    while not is_sorted(lengthList):
+        for i in range(0,n-1):
+            if lengthList[i] < lengthList[i+1]:
+                lengthList[i], lengthList[i] = lengthList[i -1], lengthList[i]
+                barList[i], barList[i -1] = barList[i  -1], barList[i]
+                random.shuffle(lengthList)
+                swap(barList[i], barList[i -1])
+                yield
+            else:
+                colorBar(barList[i], "white")
+            i = i + 1
 
 # ===========================COLOR FILL FOR THE BARS=====================
 def colorBar(col, color):
@@ -34,6 +167,7 @@ def swap(pos_0, pos_1):
     canvas.itemconfig(pos_1, fill='white')
     canvas.move(pos_0, bar21 - bar11, 0)
     canvas.move(pos_1, bar12 - bar22, 0)
+    sound(x)
 
 # ===========================Function for sound=====================
 def sound(size):
@@ -116,8 +250,30 @@ def animate():
         finally:
             root.after_cancel(animate)
 
+# ===========================Generate=====================
+colonne_size = 10
+windowSize = 500
+worker = None
+is_verify = False
 
+def generate():
+    global barList
+    global lengthList
+    global colonne_size
+    canvas.delete('all')
+    barList = []
+    lengthList = []
 
+    colonne_size = scale.get()
+    data = list(range(1, windowSize // colonne_size + 1))
+    random.shuffle(data)
+
+    for i, height in enumerate(data):
+        bar = canvas.create_rectangle(i * colonne_size, windowSize - (height * colonne_size),
+                                      i * colonne_size + colonne_size, windowSize,
+                                      outline="black", fill="white")
+        barList.append(bar)
+        lengthList.append(height * colonne_size)
 
 # ===========================GUI TKINTER=====================
 root = tk.Tk()
@@ -150,7 +306,7 @@ scale = tk.Scale(buttonFrame, from_=2, to=600 // 10, orient=HORIZONTAL, length=1
 scale.set(10)
 scale_speed = tk.Scale(buttonFrame, from_=2, to=500, orient=HORIZONTAL, length=170, label="Speed",  font=('Times', 10), background='#C69749', foreground='#282A3A')
 scale_speed.set(10)
-Generate = tk.Button(buttonFrame, text="Generate", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
+Generate = tk.Button(buttonFrame, text="Generate", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', command = generate, foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
 Start = tk.Button(buttonFrame, text="Start", width=20, font=('Times', 20), background='#C69749', highlightcolor='red', command = start,  foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
 exit = tk.Button(buttonFrame, text="Exit", width=20, font=('Times', 20), background='#C69749', highlightcolor='red',  command=root.quit, foreground='#282A3A', relief='raised', activebackground='black', activeforeground='#C69749')
 
@@ -165,18 +321,16 @@ exit.grid(padx=15, pady=15, row=5, column=0, sticky='WE')
 buttonFrame.grid(padx=15, pady=15, row=1, column=0, sticky='WE')
 
 #For Simulation
-simulationFrame = ttk.Frame(mainFrame, width=500, height=500, style='Frame4.TFrame' )
+simulationFrame = ttk.Frame(mainFrame, width=500, height=500, style='Frame4.TFrame')
 canvas = tk.Canvas(simulationFrame, bg="black", height=500, width=500, highlightcolor='black')
-canvas.grid(padx=15, pady=15, row=0, column=0)
+canvas.grid(padx=15, pady=15, row=1, column=0)
 simulationFrame.grid(padx=15, pady=15, row=1, column=1)
-
-
 
 # ==========GRID CONFIGURATIONS==========
 
 root.columnconfigure(0, weight=2)
 root.rowconfigure(0, weight=2)
 
-
+generate()
 root.resizable(width=False, height=False)
 root.mainloop()
